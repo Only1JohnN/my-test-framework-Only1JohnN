@@ -1,6 +1,7 @@
 # javascript_delays_page.py
 from selenium.webdriver.common.by import By
-from base_page import BasePage
+from basepage import BasePage
+from utils.assertion import assert_element_text
 from utils.waits import wait_for_element
 
 class JavaScriptDelaysPage(BasePage):

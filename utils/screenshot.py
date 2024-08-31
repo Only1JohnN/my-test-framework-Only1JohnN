@@ -1,4 +1,5 @@
 # screenshot.py
+import os
 from selenium.webdriver.common.by import By
 from file_utils import ensure_directory_exists, get_timestamped_filename
 from utils.logger import js_delays_logger as logger
