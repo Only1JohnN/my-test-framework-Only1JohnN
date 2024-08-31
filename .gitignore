@@ -4,3 +4,8 @@ venv/
 
 # VS Code Settings
 .vscode/
+
+
+# Python bytecode
+__pycache__/
+*.pyc
