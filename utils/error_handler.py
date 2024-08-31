@@ -1,18 +1,22 @@
+# utils/error_handler.py
 from utils.logger import js_delays_logger as logger
-import traceback
 
-def handle_error(error_message):
+def log_exception(exception, context):
     """
-    Handles errors by logging the error message and stack trace.
-    Optionally, you can add custom recovery or fallback steps within this function.
+    Logs an exception with context information.
+    :param exception: Exception instance
+    :param context: Additional context about where the exception occurred
+    """
+    logger.error(f"Exception in {context}: {exception}")
 
-    :param error_message: A custom error message to log.
+def handle_selenium_exception(func):
     """
-    try:
-        logger.error(f"Error occurred: {error_message}")
-        logger.error("Stack trace:\n" + traceback.format_exc())
-        # Optional: Implement error recovery steps or notifications here
-    except Exception as e:
-        logger.critical(f"Failed to handle error: {e}")
-        logger.critical("Handling failed:\n" + traceback.format_exc())
-        # Optional: Further action if error handling fails, like sending alerts
+    Handles Selenium-related exceptions.
+    """
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            log_exception(e, f"Function {func.__name__}")
+            raise
+    return wrapper
