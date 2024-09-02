@@ -14,6 +14,7 @@ def wait_for_element(driver, locator, timeout=Config.TIMEOUT):
     :return: WebElement if found
     """
     try:
+        logger.info(f"Waiting for element: {locator}")
         element = WebDriverWait(driver, timeout).until(EC.visibility_of_element_located(locator))
         logger.info(f"Element located: {locator}")
         return element
@@ -47,6 +48,7 @@ def wait_for_attribute(driver, locator, attribute, value, timeout=Config.TIMEOUT
     :param timeout: Maximum wait time in seconds
     """
     try:
+        logger.info(f"Waiting for element: {locator}")
         WebDriverWait(driver, timeout).until(
             EC.attribute_to_be(locator, attribute, value)
         )
@@ -65,6 +67,7 @@ def wait_for_element_clickable(driver, locator, timeout=Config.TIMEOUT):
     :return: WebElement if clickable
     """
     try:
+        logger.info(f"Waiting for element to be clickable: {locator}")
         element = WebDriverWait(driver, timeout).until(EC.element_to_be_clickable(locator))
         logger.info(f"Element is clickable: {locator}")
         return element
@@ -82,6 +85,7 @@ def wait_for_text_to_be_present(driver, locator, text, timeout=Config.TIMEOUT):
     :param timeout: Maximum wait time in seconds
     """
     try:
+        logger.info(f"Waiting for element to be present: {locator}")
         WebDriverWait(driver, timeout).until(EC.text_to_be_present_in_element(locator, text))
         logger.info(f"Text '{text}' is present in element {locator}")
     except TimeoutException:

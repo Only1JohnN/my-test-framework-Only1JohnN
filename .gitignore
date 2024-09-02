@@ -9,3 +9,8 @@ venv/
 # Python bytecode
 __pycache__/
 *.pyc
+
+
+# Logs
+logs/
+*.log
