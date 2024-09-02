@@ -6,10 +6,11 @@ from pages.basepage import BasePage
 from utils.assertion import assert_element_text
 from utils.waits import wait_for_element, wait_for_element_clickable
 from utils.logger import js_delays_logger
+from utils.screenshot import take_screenshot
 
 class JavaScriptDelaysPage(BasePage):
-    JAVASCRIPT_DELAYS_BUTTON = (By.XPATH, "//a[normalize-space()='JavaScript Delays']")
-    START_BUTTON = (By.XPATH, "///button[@id='start']")
+    JAVASCRIPT_DELAYS_BUTTON = (By.LINK_TEXT, "JavaScript Delays")
+    START_BUTTON = (By.XPATH, "//button[@id='start']")
     DELAY_FIELD = (By.CSS_SELECTOR, "#delay")
 
     def navigate_to_delays(self):
@@ -18,7 +19,7 @@ class JavaScriptDelaysPage(BasePage):
             self.click(self.JAVASCRIPT_DELAYS_BUTTON)
         except TimeoutException:
             js_delays_logger.error("Element not found or not clickable within timeout")
-            self.save_screenshot('error_screenshot.png')
+            take_screenshot(self.driver, folder='screenshots', filename='navigate_to_delays_error')
         except NoSuchElementException:
             js_delays_logger.error("Element not found on the page")
         except Exception as e:
@@ -32,7 +33,7 @@ class JavaScriptDelaysPage(BasePage):
             self.click(self.START_BUTTON)
         except TimeoutException:
             js_delays_logger.error("Element not found or not clickable within timeout")
-            self.save_screenshot('error_screenshot.png')
+            take_screenshot(self.driver, folder='screenshots', filename='start_countdown')
         except NoSuchElementException:
             js_delays_logger.error("Element not found on the page")
         except Exception as e:

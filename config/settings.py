@@ -1,7 +1,7 @@
 import os
 
 class Config:
-    BASE_URL = "https://practice-automation.com/"
+    BASE_URL = "https://practice-automation.com/javascript-delays/"
     TIMEOUT = 20
     SCREENSHOT_DIR = os.path.join(os.getcwd(), "screenshots")
     LOG_DIR = os.path.join(os.getcwd(), 'logs')

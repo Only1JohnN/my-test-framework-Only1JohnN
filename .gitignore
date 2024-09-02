@@ -14,3 +14,6 @@ __pycache__/
 # Logs
 logs/
 *.log
+
+# Screenshots
+screenshots/

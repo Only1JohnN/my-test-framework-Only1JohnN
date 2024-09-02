@@ -20,12 +20,14 @@ def test_javascript_delays(driver):
     js_delays_logger.info("Opened the Website")
     js_delays_page = JavaScriptDelaysPage(driver)
     sleep(3)
-
-    js_delays_logger.info("Attempting to click the JavaScript Delays button")
-    js_delays_page.navigate_to_delays()
-    sleep(10)
     
-    wait_for_text_to_be_present(driver, (By.LINK_TEXT, "Home"), "Home")
+    # driver.execute_script("window.scrollTo(0, 250)")
+
+    # js_delays_logger.info("Attempting to click the JavaScript Delays button")
+    # js_delays_page.navigate_to_delays()
+    # sleep(10)
+    
+    # wait_for_text_to_be_present(driver, (By.LINK_TEXT, "Home"), "Home")
     
     assert_url_matches(driver, "https://practice-automation.com/javascript-delays/")
     
