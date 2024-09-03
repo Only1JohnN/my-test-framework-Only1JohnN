@@ -1,7 +1,8 @@
 # decorators.py
 from functools import wraps
 import time
-from utils.logger import js_delays_logger as logger
+from utils.logger import setup_logger
+logger = setup_logger()
 
 def retry_on_exception(exception, retries=3, delay=2, logger=None):
     """

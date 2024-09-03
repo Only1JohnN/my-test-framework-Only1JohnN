@@ -1,5 +1,9 @@
-from selenium.common.exceptions import NoSuchElementException
-from utils.logger import js_delays_logger as logger
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from config.settings import Config
+from utils.logger import setup_logger
+logger = setup_logger()
 
 def assert_element_text(element, expected_text):
     
@@ -16,6 +20,26 @@ def assert_element_text(element, expected_text):
     """
 
 
+def wait_for_attribute(driver, locator, attribute, value, timeout=Config.TIMEOUT):
+    """
+    Waits for an element's attribute to match the specified value.
+    
+    :param driver: WebDriver instance
+    :param locator: Locator tuple (By, value)
+    :param attribute: The attribute to check
+    :param value: The expected attribute value
+    :param timeout: Maximum wait time in seconds
+    """
+    try:
+        logger.info(f"Waiting for element: {locator}")
+        WebDriverWait(driver, timeout).until(
+            EC.attribute_to_be(locator, attribute, value)
+        )
+        logger.info(f"Element {locator} has attribute '{attribute}' with value '{value}'")
+    except TimeoutException:
+        logger.error(f"Timeout waiting for attribute '{attribute}' to be '{value}' on element {locator}")
+        raise
+    
 
 def assert_element_visible(element):
     

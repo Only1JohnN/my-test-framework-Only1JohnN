@@ -2,7 +2,8 @@
 from selenium.webdriver.common.by import By
 from utils.waits import wait_for_element, wait_for_element_clickable
 from utils.assertion import assert_element_text, assert_element_visible
-from utils.logger import js_delays_logger as logger
+from utils.logger import setup_logger
+logger = setup_logger()
 
 class BasePage:
     def __init__(self, driver):

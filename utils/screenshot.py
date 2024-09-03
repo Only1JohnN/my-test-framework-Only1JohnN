@@ -2,7 +2,8 @@
 import os
 from selenium.webdriver.common.by import By
 from utils.file_utils import ensure_directory_exists, get_timestamped_filename
-from utils.logger import js_delays_logger as logger
+from utils.logger import setup_logger
+logger = setup_logger()
 
 def take_screenshot(driver, folder='screenshots', filename='screenshot'):
     """

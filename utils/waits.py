@@ -2,7 +2,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from config.settings import Config
-from utils.logger import js_delays_logger as logger
+from utils.logger import setup_logger
+logger = setup_logger()
 
 def wait_for_element(driver, locator, timeout=Config.TIMEOUT):
     """
@@ -37,10 +38,26 @@ def wait_for_ajax(driver):
         logger.error("Timed out waiting for AJAX requests to complete.")
         raise
 
+
+def attribute_to_be(locator, attribute, value):
+    """
+    Custom expected condition for checking an element's attribute value.
+
+    :param locator: Locator tuple (By, value)
+    :param attribute: The attribute to check
+    :param value: The expected attribute value
+    :return: A function that takes a WebDriver instance and returns True if the condition is met
+    """
+    def _attribute_to_be(driver):
+        element = driver.find_element(*locator)
+        return element.get_attribute(attribute) == value
+    return _attribute_to_be
+
+
 def wait_for_attribute(driver, locator, attribute, value, timeout=Config.TIMEOUT):
     """
     Waits for an element's attribute to match the specified value.
-    
+
     :param driver: WebDriver instance
     :param locator: Locator tuple (By, value)
     :param attribute: The attribute to check
@@ -50,9 +67,10 @@ def wait_for_attribute(driver, locator, attribute, value, timeout=Config.TIMEOUT
     try:
         logger.info(f"Waiting for element: {locator}")
         WebDriverWait(driver, timeout).until(
-            EC.attribute_to_be(locator, attribute, value)
+            attribute_to_be(locator, attribute, value)
         )
         logger.info(f"Element {locator} has attribute '{attribute}' with value '{value}'")
+        return driver.find_element(*locator)  # Return the element for further operations
     except TimeoutException:
         logger.error(f"Timeout waiting for attribute '{attribute}' to be '{value}' on element {locator}")
         raise

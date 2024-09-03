@@ -1,5 +1,6 @@
 # utils/error_handler.py
-from utils.logger import js_delays_logger as logger
+from utils.logger import setup_logger
+logger = setup_logger()
 
 def log_exception(exception, context):
     """
