@@ -17,3 +17,8 @@ def driver():
 def test_popups_page(driver):
     popups_page = PopupsPage(driver)
     
+    logger.info("Opened the Popups page of the Website")
+    popups_page.alert_popup()
+    popups_page.verify_alert_message("Hi there, pal!")
+    popups_page.confirm_popup
+    

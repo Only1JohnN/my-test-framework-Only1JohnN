@@ -14,33 +14,34 @@ class FormFieldsPage(BasePage):
     MESSAGE_BOX = (By.ID, "message")
     SUBMIT_BUTTON = (By.CLASS_NAME, "custom_btn")
 
-    def __init__(self, driver):
-        self.driver = driver
-
+    def scroll_to_element(self, element):
+        # Scrolls the page until the element is in view
+        self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
+        
     def enter_name(self, name):
-        self.driver.find_element(*self.NAME_INPUT).send_keys(name)
+        self.find_element(self.NAME_INPUT).send_keys(name)
 
     def enter_password(self, password):
-        self.driver.find_element(*self.PASSWORD_INPUT).send_keys(password)
+        self.find_element(self.PASSWORD_INPUT).send_keys(password)
 
     def select_favourite_drink(self):
-        self.driver.find_element(*self.DRINK_CHECKBOX).click()
+        self.find_element(self.DRINK_CHECKBOX).click()
 
     def select_favourite_color(self):
-        self.driver.find_element(*self.COLOR_CHECKBOX).click()
+        self.find_element(self.COLOR_CHECKBOX).click()
 
     def select_automation(self, option):
-        select = Select(self.driver.find_element(*self.AUTOMATION_DROPDOWN))
+        select = Select(self.find_element(self.AUTOMATION_DROPDOWN))
         select.select_by_visible_text(option)
 
     def enter_email(self, email):
-        self.driver.find_element(*self.EMAIL_INPUT).send_keys(email)
+        self.find_element(self.EMAIL_INPUT).send_keys(email)
 
     def enter_message(self, message):
-        self.driver.find_element(*self.MESSAGE_BOX).send_keys(message)
+        self.find_element(self.MESSAGE_BOX).send_keys(message)
 
     def submit_form(self):
-        self.driver.find_element(*self.SUBMIT_BUTTON).click()
+        self.find_element(self.SUBMIT_BUTTON).click()
 
     def verify_alert_message(self, expected_message):
         try:

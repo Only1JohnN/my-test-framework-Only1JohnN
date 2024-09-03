@@ -18,7 +18,7 @@ def driver():
     driver.quit()
 
 def test_javascript_delays(driver):
-    logger.info("Opened the Website")
+    logger.info("Opened the JavaScript Delays page of the Website")
     js_delays_page = JavaScriptDelaysPage(driver)
     sleep(3)
     

@@ -18,7 +18,7 @@ def driver():
 def test_form_fields(driver):
     form_fields_page = FormFieldsPage(driver)
     
-    logger.info("Opened the Website")
+    logger.info("Opened the Form fields page of the Website")
     form_fields_page.enter_name("Adeniyi John")
     form_fields_page.enter_password("password123")
     
