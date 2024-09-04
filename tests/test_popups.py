@@ -116,6 +116,10 @@ def test_popups_page(driver):
 
     # Test tooltip
     logger.info("Triggering tooltip")
-    # popups_page.tooltip()
+    click_me_to_see_a_tooltip_result = popups_page.find_element(popups_page.CLICK_ME_TO_SEE_A_TOOLTIP_RESULT)
+    
+    
+    popups_page.tooltip()
+    popups_page.assert_element_visible(element=click_me_to_see_a_tooltip_result)
 
     sleep(5)
