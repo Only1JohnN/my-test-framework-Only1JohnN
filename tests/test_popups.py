@@ -122,4 +122,4 @@ def test_popups_page(driver):
     popups_page.tooltip()
     popups_page.assert_element_visible(element=click_me_to_see_a_tooltip_result)
 
-    sleep(5)
+    sleep(3)

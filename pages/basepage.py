@@ -6,6 +6,7 @@ from selenium.common.exceptions import TimeoutException, NoAlertPresentException
 from config.settings import Config
 from utils.logger import setup_logger
 from selenium.webdriver.common.alert import Alert
+from selenium.webdriver.common.action_chains import ActionChains
 from utils.screenshot import take_screenshot
 
 logger = setup_logger()
@@ -49,6 +50,44 @@ class BasePage:
         element = self.wait_for_element(locator)
         self.assert_element_visible(element)
         
+        
+        
+        
+        
+        
+    # SLIDER METHODS
+    def move_slider(self, slider, target_value):
+        """
+        Moves the slider to the desired value using smaller increments to avoid out-of-bounds errors.
+        """
+        try:
+            current_value = int(slider.get_attribute('value'))
+            steps = int(abs(target_value - current_value) / 5)  # Adjust the division value based on your slider
+            action = ActionChains(self.driver)
+            
+            for _ in range(steps):
+                action.click_and_hold(slider).move_by_offset(5, 0).perform()  # Moves in small increments
+                action.release().perform()
+                logger.info(f"Slider moved in steps. Current value: {slider.get_attribute('value')}")
+        except Exception as e:
+            logger.error(f"Error while moving slider: {str(e)}")
+            raise
+
+    def set_slider_value_js(self, slider, value):
+        """
+        Sets the slider value directly using JavaScript.
+        """
+        try:
+            self.driver.execute_script("arguments[0].value = arguments[1];", slider, value)
+            logger.info(f"Slider set to value {value} using JavaScript.")
+        except Exception as e:
+            logger.error(f"Error setting slider value via JavaScript: {str(e)}")
+            raise
+        
+    
+    
+    
+    
     
     # SCROLLING TO ELEMENTS BEFORE PERFORMING ACTIONS
     def scroll_to_element_and_perform_action(self, locator, action, *args, timeout=Config.TIMEOUT):
