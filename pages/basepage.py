@@ -304,7 +304,7 @@ class BasePage:
     
     def accept_alert(self):
         try:
-            alert = Alert(self.driver)
+            alert = self.wait_for_alert_present()
             alert.accept()  # Clicks "OK" on the alert
             logger.info("Alert accepted.")
         except NoAlertPresentException:
@@ -313,20 +313,20 @@ class BasePage:
 
     def dismiss_alert(self):
         try:
-            alert = Alert(self.driver)
+            alert = self.wait_for_alert_present()
             alert.dismiss()  # Clicks "Cancel" on the alert
             logger.info("Alert dismissed.")
         except NoAlertPresentException:
             logger.error("No alert present to dismiss.")
             raise
         
-    def send_text_to_alert(self, text):
+    def send_text_to_alert(self, text, timeout=10):
         try:
+            WebDriverWait(self.driver, timeout).until(EC.alert_is_present())
             alert = Alert(self.driver)
-            alert.send_keys(text)  # Enter text into the alert's input field
-            alert.accept()  # Clicks "OK" after entering text
-            logger.info(f"Text '{text}' sent to alert and alert accepted.")
-        except NoAlertPresentException:
-            logger.error("No alert present to send text.")
+            alert.send_keys(text)
+            logger.info(f"Text '{text}' sent to alert.")
+        except TimeoutException:
+            logger.error("Alert did not appear within the timeout period.")
             raise
 

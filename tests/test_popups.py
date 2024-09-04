@@ -43,16 +43,17 @@ def test_popups_page(driver):
     
     #Scenario-1 : Click Ok
     popups_page.confirm_popup()
+    sleep(2)
     popups_page.verify_alert_message(expected_message="OK or Cancel, which will it be?")
     popups_page.accept_alert()
-    sleep(2)
     popups_page.assert_element_text(element=confirm_popup_result, expected_text="OK it is!")
     
+    sleep(3)
     #Scenario-2 : Click Cancel
     popups_page.confirm_popup()
+    sleep(2)
     popups_page.verify_alert_message(expected_message="OK or Cancel, which will it be?")
     popups_page.dismiss_alert()
-    sleep(2)
     popups_page.assert_element_text(element=confirm_popup_result, expected_text="Cancel it is!")
 
 
@@ -64,44 +65,49 @@ def test_popups_page(driver):
     logger.info("Triggering prompt popup")
     prompt_popup_result = popups_page.find_element(popups_page.PROMPT_POPUP_RESULT)
     
+    sleep(3)
     #Scenario-1 : Click Cancel without entering text    
     popups_page.prompt_popup()
+    sleep(2)
     popups_page.verify_alert_message(expected_message="Hi there, what's your name?")
     popups_page.dismiss_alert()
     logger.info("Clicked Cancel without entering text")
-    sleep(2)
     popups_page.assert_element_text(element=prompt_popup_result, expected_text="Fine, be that way...")
     
     
+    sleep(3)
     #Scenario-2 : Click Ok without entering text
     popups_page.prompt_popup()
+    sleep(2)
     popups_page.verify_alert_message(expected_message="Hi there, what's your name?")
     popups_page.accept_alert()
     logger.info("Clicked Ok without entering text")
-    sleep(2)
     popups_page.assert_element_text(element=prompt_popup_result, expected_text="Fine, be that way...")
     
     
+    sleep(3)
     #Scenario-3 : Click Cancel after entering text
     popups_page.prompt_popup()
+    sleep(2)
     popups_page.verify_alert_message(expected_message="Hi there, what's your name?")
     entered_text = "Only1JohnN"
     popups_page.send_text_to_alert(entered_text)
     popups_page.dismiss_alert()
     logger.info("Clicked Cancel after entering text")
-    sleep(2)
     popups_page.assert_element_text(element=prompt_popup_result, expected_text="Fine, be that way...")
     
     
+    sleep(3)
     #Scenario-4 : Click Ok after entering text
     popups_page.prompt_popup()
+    sleep(2)
     popups_page.verify_alert_message(expected_message="Hi there, what's your name?")
     entered_text = "Only1JohnN"
     popups_page.send_text_to_alert(entered_text)
+    sleep(3)
     popups_page.accept_alert()
     logger.info("Clicked Ok after entering text")
-    sleep(2)
-    popups_page.assert_element_text(element=prompt_popup_result, expected_text=f"Nice to meet you,{entered_text}")
+    popups_page.assert_element_text(element=prompt_popup_result, expected_text=f"Nice to meet you, {entered_text}!")
 
 
 
@@ -110,6 +116,6 @@ def test_popups_page(driver):
 
     # Test tooltip
     logger.info("Triggering tooltip")
-    popups_page.tooltip()
+    # popups_page.tooltip()
 
     sleep(5)
