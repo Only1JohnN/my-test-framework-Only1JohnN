@@ -2,9 +2,10 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, NoAlertPresentException, NoSuchElementException
 from config.settings import Config
 from utils.logger import setup_logger
+from selenium.webdriver.common.alert import Alert
 from utils.screenshot import take_screenshot
 
 logger = setup_logger()
@@ -19,6 +20,16 @@ class BasePage:
 
 
     # Element Interaction Methods
+    def find_element(self, locator):
+        try:
+            return self.driver.find_element(*locator)
+        except NoSuchElementException:
+            logger.error(f"Element not found: {locator}")
+            raise
+        except Exception as e:
+            logger.error(f"Error finding element: {locator}. Exception: {e}")
+            raise
+    
     def click(self, locator):
         element = self.wait_for_element_clickable(locator)
         element.click()
@@ -269,3 +280,53 @@ class BasePage:
         except AssertionError as e:
             logger.error(f"Assertion failed: {e}")
             raise
+        
+        
+        
+        
+        
+    # Handling Alert Methods
+    def verify_alert_message(self, expected_message):
+        try:
+            alert = self.wait_for_alert_present()
+            alert_text = alert.text
+            assert alert_text == expected_message, f"Expected '{expected_message}', but got '{alert_text}'"
+            logger.info(f"Alert message verification passed: '{expected_message}'")
+        except NoAlertPresentException:
+            logger.error("Alert is not present after form submission.")
+            raise
+        except AssertionError as e:
+            logger.error(f"Assertion failed: {e}")
+            raise
+        except Exception as e:
+            logger.error(f"Error verifying alert message. Exception: {e}")
+            raise
+    
+    def accept_alert(self):
+        try:
+            alert = Alert(self.driver)
+            alert.accept()  # Clicks "OK" on the alert
+            logger.info("Alert accepted.")
+        except NoAlertPresentException:
+            logger.error("No alert present to accept.")
+            raise
+
+    def dismiss_alert(self):
+        try:
+            alert = Alert(self.driver)
+            alert.dismiss()  # Clicks "Cancel" on the alert
+            logger.info("Alert dismissed.")
+        except NoAlertPresentException:
+            logger.error("No alert present to dismiss.")
+            raise
+        
+    def send_text_to_alert(self, text):
+        try:
+            alert = Alert(self.driver)
+            alert.send_keys(text)  # Enter text into the alert's input field
+            alert.accept()  # Clicks "OK" after entering text
+            logger.info(f"Text '{text}' sent to alert and alert accepted.")
+        except NoAlertPresentException:
+            logger.error("No alert present to send text.")
+            raise
+

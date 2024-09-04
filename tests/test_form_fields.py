@@ -47,4 +47,5 @@ def test_form_fields(driver):
     
     sleep(2)
     form_fields_page.verify_alert_message(expected_message="Message received!")
+    form_fields_page.accept_alert()
     sleep(3)

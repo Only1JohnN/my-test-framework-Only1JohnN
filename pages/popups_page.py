@@ -42,17 +42,3 @@ class PopupsPage(BasePage):
             
     def tooltip(self):
         self._click_popup(self.CLICK_ME_TO_SEE_A_TOOLTIP, 'tooltip_popup')
-    
-    def verify_alert_message(self, expected_message):
-        try:
-            alert = self.driver.switch_to.alert
-            alert_text = alert.text
-            self.wait_for_text_to_be_present(alert_text, "Hi there, pal!")
-            assert alert_text == expected_message, f"Expected '{expected_message}', but got '{alert_text}'"
-            logger.info(f"Alert message verification passed: '{expected_message}'")
-        except NoAlertPresentException:
-            logger.error("Alert is not present after the form submission.")
-            raise
-        except AssertionError as e:
-            logger.error(f"Assertion failed: {e}")
-            raise

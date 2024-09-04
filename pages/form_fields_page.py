@@ -64,19 +64,3 @@ class FormFieldsPage(BasePage):
         element = self.wait_for_element_clickable(self.SUBMIT_BUTTON)
         element.click()
         logger.info("Form submitted")
-
-    def verify_alert_message(self, expected_message):
-        try:
-            alert = self.wait_for_alert_present()
-            alert_text = alert.text
-            assert alert_text == expected_message, f"Expected '{expected_message}', but got '{alert_text}'"
-            logger.info(f"Alert message verification passed: '{expected_message}'")
-        except NoAlertPresentException:
-            logger.error("Alert is not present after form submission.")
-            raise
-        except AssertionError as e:
-            logger.error(f"Assertion failed: {e}")
-            raise
-        except Exception as e:
-            logger.error(f"Error verifying alert message. Exception: {e}")
-            raise
