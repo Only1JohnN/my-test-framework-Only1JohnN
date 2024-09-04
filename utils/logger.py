@@ -3,7 +3,7 @@ import logging
 import os
 from config.settings import Config
 
-def setup_logger(name='app'):
+def setup_logger(name='Only1JohnN'):
     """
     Sets up a logger with a dynamic log file and console output.
     """

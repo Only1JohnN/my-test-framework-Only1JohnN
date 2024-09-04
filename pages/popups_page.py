@@ -6,7 +6,7 @@ from pages.basepage import BasePage
 from utils.screenshot import take_screenshot
 from utils.logger import setup_logger
 
-logger = setup_logger('popups_page')
+logger = setup_logger()
 logger.info("Test started")
 
 class PopupsPage(BasePage):
@@ -47,7 +47,7 @@ class PopupsPage(BasePage):
         try:
             alert = self.driver.switch_to.alert
             alert_text = alert.text
-            self.wait_for_text_to_be_present(alert_text, "Hi there, pal!")  # Using the BasePage method
+            self.wait_for_text_to_be_present(alert_text, "Hi there, pal!")
             assert alert_text == expected_message, f"Expected '{expected_message}', but got '{alert_text}'"
             logger.info(f"Alert message verification passed: '{expected_message}'")
         except NoAlertPresentException:

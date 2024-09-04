@@ -6,7 +6,7 @@ from pages.basepage import BasePage
 from utils.logger import setup_logger
 from utils.screenshot import take_screenshot
 
-logger = setup_logger('javascript_delays_page')
+logger = setup_logger()
 logger.info("Test started")
 
 class JavaScriptDelaysPage(BasePage):
@@ -46,7 +46,7 @@ class JavaScriptDelaysPage(BasePage):
 
     def verify_liftoff(self):
         try:
-            element = self.wait_for_attribute(self.DELAY_FIELD, attribute="value", value="Liftoff!")
+            element = self.wait_for_attribute(self, self.DELAY_FIELD, "value", "Liftoff!")
             self.assert_element_text(element, "Liftoff!")
             logger.info("Liftoff verification successful")
         except AssertionError:

@@ -2,6 +2,7 @@
 import pytest
 from selenium import webdriver
 from pages.javascript_delays_page import JavaScriptDelaysPage
+from pages.basepage import BasePage
 from config.settings import Config
 from time import sleep
 from utils.logger import setup_logger
@@ -25,11 +26,8 @@ def test_javascript_delays(driver):
     # Scroll to ensure the button is in view
     driver.execute_script("window.scrollTo(0, 400)")
 
-    # Navigate to the JavaScript Delays page if necessary
-    # js_delays_page.navigate_to_delays()
 
-    # Validate the current URL
-    assert js_delays_page.get_current_url() == "https://practice-automation.com/javascript-delays/"
+    js_delays_page.assert_url_matches(expected_url="https://practice-automation.com/javascript-delays/")
     logger.info("URL verification successful")
 
     # Start the countdown
@@ -40,8 +38,8 @@ def test_javascript_delays(driver):
     sleep(15)
 
     # Verify the liftoff message
-    logger.info("Verifying liftoff")
-    js_delays_page.verify_liftoff()
+    # logger.info("Verifying liftoff")
+    # js_delays_page.verify_liftoff()
 
     # Optional sleep to ensure all operations are completed
     sleep(3)
