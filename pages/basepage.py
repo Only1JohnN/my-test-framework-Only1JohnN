@@ -2,12 +2,18 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException, NoAlertPresentException, NoSuchElementException
+from selenium.common.exceptions import (TimeoutException, 
+                                        NoAlertPresentException, 
+                                        NoSuchElementException, 
+                                        StaleElementReferenceException, 
+                                        MoveTargetOutOfBoundsException, 
+                                        WebDriverException)
 from config.settings import Config
 from utils.logger import setup_logger
 from selenium.webdriver.common.alert import Alert
 from selenium.webdriver.common.action_chains import ActionChains
 from utils.screenshot import take_screenshot
+
 
 logger = setup_logger()
 
@@ -59,29 +65,65 @@ class BasePage:
     def move_slider(self, slider, target_value):
         """
         Moves the slider to the desired value using smaller increments to avoid out-of-bounds errors.
+        :param slider: The slider element to interact with
+        :param target_value: The value to which the slider needs to be moved
         """
         try:
             current_value = int(slider.get_attribute('value'))
             steps = int(abs(target_value - current_value) / 5)  # Adjust the division value based on your slider
+            logger.info(f"Attempting to move slider from {current_value} to {target_value} in {steps} steps.")
+
+            # Use ActionChains to perform slider movements
             action = ActionChains(self.driver)
-            
+
             for _ in range(steps):
-                action.click_and_hold(slider).move_by_offset(5, 0).perform()  # Moves in small increments
-                action.release().perform()
-                logger.info(f"Slider moved in steps. Current value: {slider.get_attribute('value')}")
+                try:
+                    action.click_and_hold(slider).move_by_offset(5, 0).perform()  # Moves in small increments
+                    action.release().perform()
+                    current_value = int(slider.get_attribute('value'))
+                    logger.info(f"Slider moved in step. Current value: {current_value}")
+
+                    # Optional check to break early if target reached
+                    if current_value == target_value:
+                        logger.info(f"Slider reached the desired value: {target_value}")
+                        break
+                except MoveTargetOutOfBoundsException as e:
+                    logger.error(f"Move target out of bounds during steps: {str(e)} - Adjusting offset.")
+                    # Optionally, adjust the offset or attempt smaller increments
+                    action.reset_actions()  # Resets the action chain to prevent stale actions
+
+        except (NoSuchElementException, StaleElementReferenceException) as e:
+            logger.error(f"Slider element interaction failed: {str(e)}")
+        except ValueError as e:
+            logger.error(f"Invalid value encountered while parsing slider values: {str(e)}")
+        except WebDriverException as e:
+            logger.error(f"WebDriver error occurred while moving slider: {str(e)}")
         except Exception as e:
-            logger.error(f"Error while moving slider: {str(e)}")
+            logger.error(f"Unexpected error while moving slider: {str(e)}")
             raise
 
     def set_slider_value_js(self, slider, value):
         """
         Sets the slider value directly using JavaScript.
+        :param slider: The slider element to interact with
+        :param value: The value to set on the slider
         """
         try:
             self.driver.execute_script("arguments[0].value = arguments[1];", slider, value)
             logger.info(f"Slider set to value {value} using JavaScript.")
+
+            # Optional verification to confirm the value was set correctly
+            actual_value = slider.get_attribute('value')
+            if str(actual_value) != str(value):
+                logger.warning(f"Slider value mismatch. Expected: {value}, Actual: {actual_value}")
+                # Optionally retry setting the value or raise an error
+
+        except (NoSuchElementException, StaleElementReferenceException) as e:
+            logger.error(f"Failed to locate or interact with slider element for JS setting: {str(e)}")
+        except WebDriverException as e:
+            logger.error(f"WebDriver error while setting slider value using JavaScript: {str(e)}")
         except Exception as e:
-            logger.error(f"Error setting slider value via JavaScript: {str(e)}")
+            logger.error(f"Unexpected error occurred while setting slider value via JavaScript: {str(e)}")
             raise
         
     
