@@ -1,8 +1,12 @@
 # pages/form_fields_page.py
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
-from selenium.common.exceptions import NoAlertPresentException
+from selenium.common.exceptions import NoAlertPresentException, NoSuchElementException, ElementNotInteractableException
 from pages.basepage import BasePage
+from utils.logger import setup_logger
+
+logger = setup_logger('form_fields_page')
+logger.info("Test started")
 
 class FormFieldsPage(BasePage):
     NAME_INPUT = (By.ID, "name-input")
@@ -15,38 +19,65 @@ class FormFieldsPage(BasePage):
     SUBMIT_BUTTON = (By.CLASS_NAME, "custom_btn")
 
     def scroll_to_element(self, element):
-        # Scrolls the page until the element is in view
-        self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
-        
+        try:
+            self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
+        except Exception as e:
+            logger.error(f"Error scrolling to element: {element}. Exception: {e}")
+
     def enter_name(self, name):
-        self.find_element(self.NAME_INPUT).send_keys(name)
+        element = self.wait_for_element_visible(self.NAME_INPUT)
+        element.send_keys(name)
+        self.logger.info(f"Entered name: {name}")
 
     def enter_password(self, password):
-        self.find_element(self.PASSWORD_INPUT).send_keys(password)
+        element = self.wait_for_element_visible(self.PASSWORD_INPUT)
+        element.send_keys(password)
+        self.logger.info("Entered password")
 
     def select_favourite_drink(self):
-        self.find_element(self.DRINK_CHECKBOX).click()
+        element = self.wait_for_element_clickable(self.DRINK_CHECKBOX)
+        element.click()
+        self.logger.info("Selected favourite drink")
 
     def select_favourite_color(self):
-        self.find_element(self.COLOR_CHECKBOX).click()
+        element = self.wait_for_element_clickable(self.COLOR_CHECKBOX)
+        element.click()
+        self.logger.info("Selected favourite color")
 
     def select_automation(self, option):
-        select = Select(self.find_element(self.AUTOMATION_DROPDOWN))
+        element = self.wait_for_element_visible(self.AUTOMATION_DROPDOWN)
+        select = Select(element)
         select.select_by_visible_text(option)
+        self.logger.info(f"Selected automation option: {option}")
 
     def enter_email(self, email):
-        self.find_element(self.EMAIL_INPUT).send_keys(email)
+        element = self.wait_for_element_visible(self.EMAIL_INPUT)
+        element.send_keys(email)
+        self.logger.info(f"Entered email: {email}")
 
     def enter_message(self, message):
-        self.find_element(self.MESSAGE_BOX).send_keys(message)
+        element = self.wait_for_element_visible(self.MESSAGE_BOX)
+        element.send_keys(message)
+        self.logger.info(f"Entered message: {message}")
 
     def submit_form(self):
-        self.find_element(self.SUBMIT_BUTTON).click()
+        element = self.wait_for_element_clickable(self.SUBMIT_BUTTON)
+        element.click()
+        self.logger.info("Form submitted")
 
     def verify_alert_message(self, expected_message):
         try:
-            alert = self.driver.switch_to.alert
+            alert = self.wait_for_alert_present()
             alert_text = alert.text
+            self.wait_for_text_to_be_present(alert_text, expected_message)
             assert alert_text == expected_message, f"Expected '{expected_message}', but got '{alert_text}'"
+            self.logger.info(f"Alert message verification passed: '{expected_message}'")
         except NoAlertPresentException:
-            raise AssertionError("Alert is not present after the form submission.")
+            self.logger.error("Alert is not present after form submission.")
+            raise
+        except AssertionError as e:
+            self.logger.error(f"Assertion failed: {e}")
+            raise
+        except Exception as e:
+            self.logger.error(f"Error verifying alert message. Exception: {e}")
+            raise
