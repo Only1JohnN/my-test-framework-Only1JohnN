@@ -1,4 +1,4 @@
-# tests/test_slider_page.py
+# tests/test_slider.py
 import pytest
 from selenium import webdriver
 from pages.slider_page import SliderPage

@@ -1,4 +1,4 @@
-# javascript_delays_page.py
+# pages/javascript_delays_page.py
 import traceback
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver.common.by import By

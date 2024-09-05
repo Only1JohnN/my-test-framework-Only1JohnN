@@ -1,4 +1,4 @@
-# tests/test_popups_page.py
+# tests/test_popups.py
 import pytest
 from selenium import webdriver
 from pages.popups_page import PopupsPage
